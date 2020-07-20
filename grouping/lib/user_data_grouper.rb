@@ -24,27 +24,12 @@ class UserDataGrouper
     CSV.open(@write_file, "wb") do |csv_output|
 
       headers_to_match = headers_to_match_from_matching_type(matching_type)
+      user_attribute_graph = build_user_attribute_graph(headers_to_match)
 
-      # slurp in the input CSV to construct the graph of the data we need to normalize
-      CSV.foreach(input_file, headers:true).with_index(1) do |row, ln|
-        if (ln == 1)
-	  @input_headers = row.headers
-	  input_headers.each.with_index do |header, index|
-            match_columns << index if headers_to_match.include? header
-          end
-        end
-
-        plucked_data = pluck_data(row, match_columns)      	
-
-	plucked_data.each do |datum|
-	  data_row_map.add_row_to_item(datum, ln)
-	end
-      end
- 
-      output_headers = ["ID"].concat(input_headers)
+      @output_headers = ["ID"].concat(@input_headers)
       csv_output << output_headers
 
-      grouped_sets = normalize_graph(data_row_map.get_values)
+      grouped_sets = normalize_graph(user_attribute_graph.get_values)
       new_csv_table = new_csv_with_prepended_ids(grouped_sets)
 
       new_csv_table.each do |row|
@@ -164,6 +149,26 @@ class UserDataGrouper
       end
     end
     new_csv_table
+  end
+
+  def build_user_attribute_graph(headers_to_match)
+    data_row_map = DataRowMap.new()
+    # slurp in the input CSV to construct the graph of the data we need to normalize
+    CSV.foreach(input_file, headers:true).with_index(1) do |row, ln|
+      if (ln == 1)
+        @input_headers = row.headers
+        input_headers.each.with_index do |header, index|
+          match_columns << index if headers_to_match.include? header
+        end
+      end
+
+      plucked_data = pluck_data(row, match_columns)      	
+
+      plucked_data.each do |datum|
+        data_row_map.add_row_to_item(datum, ln)
+      end
+    end
+    data_row_map
   end
 end
 
