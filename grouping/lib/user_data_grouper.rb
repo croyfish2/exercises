@@ -2,7 +2,7 @@
 require 'csv'
 
 class UserDataGrouper
-  attr_accessor :input_file, :input_headers, :filename, :matching_type, :output_dir, :output_headers, :data_row_map, :match_columns
+  attr_accessor :input_file, :input_headers, :filename, :matching_type, :output_dir, :data_row_map, :match_columns
 
   ACCEPTED_MATCHING_TYPES = %w"email phone email_or_phone".freeze
   KNOWN_EMAIL_ADDRESS_HEADERS = %w"Email Email1 Email2".freeze
@@ -15,7 +15,6 @@ class UserDataGrouper
     @matching_type = matching_type
     @match_columns = []
     @output_dir = output_dir
-    @output_headers = []
     @data_row_map = DataRowMap.new()
     @write_file = absolute_path_from_relative(output_file)
   end
@@ -26,11 +25,11 @@ class UserDataGrouper
       headers_to_match = headers_to_match_from_matching_type(matching_type)
       user_attribute_graph = build_user_attribute_graph(headers_to_match)
 
-      @output_headers = ["ID"].concat(@input_headers)
+      output_headers = ["ID"].concat(@input_headers)
       csv_output << output_headers
 
       grouped_sets = normalize_graph(user_attribute_graph.get_values)
-      new_csv_table = new_csv_with_prepended_ids(grouped_sets)
+      new_csv_table = new_csv_with_prepended_ids(grouped_sets, output_headers)
 
       new_csv_table.each do |row|
         csv_output << row if row
@@ -137,7 +136,7 @@ class UserDataGrouper
     plucked_data
   end
 
-  def new_csv_with_prepended_ids(grouped_sets)
+  def new_csv_with_prepended_ids(grouped_sets, output_headers)
     # read in entire input CSV to copy the rows and write to the output file
     csv_input = CSV.read(input_file, headers:true) 
     new_csv_table = Array.new(csv_input.length)
@@ -152,9 +151,13 @@ class UserDataGrouper
   end
 
   def build_user_attribute_graph(headers_to_match)
+
     data_row_map = DataRowMap.new()
+
     # slurp in the input CSV to construct the graph of the data we need to normalize
     CSV.foreach(input_file, headers:true).with_index(1) do |row, ln|
+
+      # grab the headers from the first line
       if (ln == 1)
         @input_headers = row.headers
         input_headers.each.with_index do |header, index|
@@ -168,6 +171,7 @@ class UserDataGrouper
         data_row_map.add_row_to_item(datum, ln)
       end
     end
+
     data_row_map
   end
 end
