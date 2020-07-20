@@ -1,6 +1,6 @@
 # Grouping Application
 
-Grouping Application is a lightweight Ruby app to identify possible duplicate rows in csv files representing user data.
+Grouping Application is a lightweight Ruby app that can be used to identify possible duplicate rows in csv files representing user data.
 
 
 ## Features
@@ -28,3 +28,9 @@ Grouping Application is a lightweight Ruby app to identify possible duplicate ro
 
 `ruby grouping.rb files/input/input1.csv email`
 `ruby grouping.rb files/input/input2.csv email_or_phone`
+
+
+## Notes
+
+* The currently recognized column headers for email are `Email`, `Email1`, and `Email2`
+* The currently regognized column headers for phone are `Phone`, `Phone1`, and `Phone2`
