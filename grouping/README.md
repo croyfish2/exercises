@@ -11,7 +11,7 @@ Grouping Application is a lightweight Ruby app that can be used to identify poss
 
 ## Requirements
 
-* Ruby 2.6.0+
+* Ruby 2.6.1+
 
 
 ## Usage
