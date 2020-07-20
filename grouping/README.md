@@ -33,4 +33,4 @@ Grouping Application is a lightweight Ruby app that can be used to identify poss
 ## Notes
 
 * The currently recognized column headers for email are `Email`, `Email1`, and `Email2`
-* The currently regognized column headers for phone are `Phone`, `Phone1`, and `Phone2`
+* The currently recognized column headers for phone are `Phone`, `Phone1`, and `Phone2`
