@@ -4,6 +4,9 @@ require "user_data_grouper"
 describe UserDataGrouper do
 
   TEST_OUTPUT_FILE_DIR = "test/output/".freeze
+  TEST_OUTPUT_ABSOLUTE_PATH = File.expand_path('../files/' + TEST_OUTPUT_FILE_DIR, File.dirname(__FILE__)).freeze
+  TEST_EXPECTED_FILE_DIR = File.expand_path('../files/test/expected/', File.dirname(__FILE__)).freeze
+
   INPUT_FILE_1_PATH = File.expand_path('../files/test/input/input1.csv', File.dirname(__FILE__)).freeze
   INPUT_FILE_2_PATH = File.expand_path('../files/test/input/input2.csv', File.dirname(__FILE__)).freeze
   INPUT_FILE_3_PATH = File.expand_path('../files/test/input/input3.csv', File.dirname(__FILE__)).freeze
@@ -15,27 +18,39 @@ describe UserDataGrouper do
   describe "#group" do
     subject { UserDataGrouper.new(*test_args).group }
 
+    let(:output_file) { File.open(TEST_OUTPUT_ABSOLUTE_PATH + '/' + output_file_name) }
+    let(:expected_file) { File.open(TEST_EXPECTED_FILE_DIR + '/' + output_file_name) }
+
     context "matching on email address" do
       let(:matching_type) { "email" }
 
       context "the file is input1.csv" do
         let(:csv_file_path) { INPUT_FILE_1_PATH }
+	let(:output_file_name) { "input1_matched_on_email.csv" }
+
         it "executes successfully for input1.csv" do
           subject
+	  expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
   
       context "the file is input2.csv" do
         let(:csv_file_path) { INPUT_FILE_2_PATH } 
+	let(:output_file_name) { "input2_matched_on_email.csv" }
+
         it "executes successfully for input2.csv" do
           subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
   
       context "the file is input3.csv" do
         let(:csv_file_path) { INPUT_FILE_3_PATH } 
-        it "executes successfully for input3.csv" do
-          #subject
+	let(:output_file_name) { "input3_matched_on_email.csv" }
+
+        xit "executes successfully for input3.csv" do
+          subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
     end
@@ -45,22 +60,31 @@ describe UserDataGrouper do
 
       context "the file is input1.csv" do
         let(:csv_file_path) { INPUT_FILE_1_PATH }
+	let(:output_file_name) { "input1_matched_on_phone.csv" }
+
         it "executes successfully for input1.csv" do
           subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
   
       context "the file is input2.csv" do
         let(:csv_file_path) { INPUT_FILE_2_PATH } 
+	let(:output_file_name) { "input2_matched_on_phone.csv" }
+
         it "executes successfully for input2.csv" do
           subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
   
       context "the file is input3.csv" do
         let(:csv_file_path) { INPUT_FILE_3_PATH } 
-        it "executes successfully for input3.csv" do
-          #subject
+	let(:output_file_name) { "input3_matched_on_phone.csv" }
+
+        xit "executes successfully for input3.csv" do
+          subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
     end
@@ -70,22 +94,31 @@ describe UserDataGrouper do
 
       context "the file is input1.csv" do
         let(:csv_file_path) { INPUT_FILE_1_PATH }
+	let(:output_file_name) { "input1_matched_on_email_or_phone.csv" }
+
         it "executes successfully for input1.csv" do
           subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
   
       context "the file is input2.csv" do
         let(:csv_file_path) { INPUT_FILE_2_PATH } 
+	let(:output_file_name) { "input2_matched_on_email_or_phone.csv" }
+
         it "executes successfully for input2.csv" do
           subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
   
       context "the file is input3.csv" do
         let(:csv_file_path) { INPUT_FILE_3_PATH } 
-        it "executes successfully for input3.csv" do
-          #subject
+	let(:output_file_name) { "input3_matched_on_email_or_phone.csv" }
+
+        xit "executes successfully for input3.csv" do
+          subject
+          expect(FileUtils.identical?(expected_file, output_file)).to be(true) 
         end
       end
     end
