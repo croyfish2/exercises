@@ -1,7 +1,4 @@
 # encoding: utf-8
-
-abort "ERROR: You are running the Grouping application on an unsupported version of Ruby (Ruby #{RUBY_VERSION} #{RUBY_RELEASE_DATE})! Please upgrade to at least Ruby v2.6.0" if RUBY_VERSION < "2.6"
-
 require 'csv'
 
 class UserDataGrouper
@@ -26,34 +23,32 @@ class UserDataGrouper
 
       headers_to_match = headers_to_match_from_matching_type(matching_type)
 
-      CSV.foreach(@input_file, headers:true).with_index(1) do |row, ln|
+      # slurp in the input CSV to construct the graph of the data we need to normalize
+      CSV.foreach(input_file, headers:true).with_index(1) do |row, ln|
         if (ln == 1)
           row.headers.each.with_index do |header, index|
             match_columns << index if headers_to_match.include? header
           end
         end
 
-        matching_data = get_matching_data(row, match_columns)      	
+        plucked_data = pluck_data(row, match_columns)      	
 
-	matching_data.each do |datum|
+	plucked_data.each do |datum|
 	  data_row_map.add_row_to_item(datum, ln)
 	end
-
       end
 
-      #ungrouped_sets = data_row_map.get_values
-      ungrouped_sets = data_row_map.data_row_map.values
-      #puts "Here's my ungrouped sets #{ungrouped_sets}"
-      grouped_sets = normalize_graph(ungrouped_sets)
-      #puts "Here's my grouped sets #{grouped_sets}"
+      grouped_sets = normalize_graph(data_row_map.get_values)
 
-      csv_input = CSV.read(@input_file, headers:true) 
+      # read in entire input CSV to copy the rows and write to the output file
+      csv_input = CSV.read(input_file, headers:true) 
       new_csv_table = Array.new(csv_input.length)
 
       headers = csv_input.headers
       new_headers = ["ID"].concat(headers)
       csv_output << new_headers
 
+      # should make this a method & unit test it
       grouped_sets.each.with_index do |grouped_set, index|	
         grouped_set.each do |row_number| 
 	  new_row_data = CSV.parse("#{index + 1},#{csv_input[row_number - 1]}")
@@ -82,7 +77,6 @@ class UserDataGrouper
       datum 
     end
   end
-
 
   # Reorganizes the sets provided such that all connected nodes (e.g., people or personal info)
   # belong to the same sets
@@ -152,21 +146,20 @@ class UserDataGrouper
     end
   end
 
-
   # Takes a CSV::row object and an array of columns to pluck data from
   # and returns an array of the data excluding nil and empty values
   # 
-  def get_matching_data(row, match_columns)
-    matching_data = []        	
+  def pluck_data(row, match_columns)
+    plucked_data = []        	
     match_columns.each do |index|
       unformatted_datum = row[index]
       unless unformatted_datum.nil? || unformatted_datum.empty?
         type = (KNOWN_EMAIL_ADDRESS_HEADERS.include? row.headers[index]) ? "email" : "phone"
         formatted_datum_at_index = format_datum_by_type(unformatted_datum, type)
-        matching_data << formatted_datum_at_index 
+        plucked_data << formatted_datum_at_index 
       end	
     end
-    matching_data
+    plucked_data
   end
 end
 

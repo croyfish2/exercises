@@ -422,8 +422,8 @@ describe UserDataGrouper do
       end
     end
           	
-    describe "#get_matching_data" do
-      subject { UserDataGrouper.new(*test_args).get_matching_data(test_row, test_match_cols) }
+    describe "#pluck_data" do
+      subject { UserDataGrouper.new(*test_args).pluck_data(test_row, test_match_cols) }
       let(:test_headers) { ["h1", "h2", "h3", "h4"] }
       let(:test_row) { CSV::Row.new(test_headers, test_row_data) } 
    
