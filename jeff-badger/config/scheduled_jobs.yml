@@ -1,0 +1,14 @@
+get_and_badge_new_prospect_defaults: &get_and_badge_new_prospect_defaults
+  name: Get And Badge New Prospect
+  class: GetAndBadgeNewProspectJob
+  cron: '*/5 * * * *'
+
+development:
+  - <<: *get_and_badge_new_prospect_defaults
+
+test:
+  - <<: *get_and_badge_new_prospect_defaults
+
+production:
+  - <<: *get_and_badge_new_prospect_defaults
+    cron: '0 * * * *'

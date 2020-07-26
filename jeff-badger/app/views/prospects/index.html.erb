@@ -1,0 +1,30 @@
+<h1>Jeff-Badger</h1>
+<h2>Our Five Newest Prospects</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>[First Name]</th>
+      <th>[Last Name]</th>
+      <th>[Position]</th>
+      <th>[Badge]</th>
+      <th>[Recruited At]</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @prospects.each do |prospect| %>
+      <tr>
+	<td><%= prospect.first_name %></td>
+	<td><%= prospect.last_name %></td>
+	<td><%= prospect.position %></td>
+	<td><img src=<%= prospect.badge_image_url %> height='40'></td>
+	<td><%= prospect.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+     
+      
