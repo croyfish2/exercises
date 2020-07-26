@@ -1,24 +1,5 @@
-# README
+# Jeff-Badger
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Pulls in NHL draft prospect userdata at a rate of one prospect per hour automatically assigns the prospect a Credly badge based on the player's position. The last 5 players acquired and their awarded badges are available on the homepage.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Ruby version: 2.6.6
