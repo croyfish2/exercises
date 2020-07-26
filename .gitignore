@@ -2,3 +2,5 @@
 /grouping/files/output
 /grouping/files/test/output
 *.swp
+.env.development
+.env.test
